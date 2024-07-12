@@ -1,0 +1,54 @@
+3. RF VS GLM
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load your dataset
+# Replace 'your_dataset.csv' with the actual file path or URL to your dataset
+df = pd.read_csv('/content/PS4_GamesSales.csv')
+
+# Assuming 'Rest of World' is the target variable
+X = df[['India', 'England', 'North America', 'Japan', 'Russia', 'China', 'South Korea']]
+y = df['Rest of World']
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train Random Forest regressor
+rf_regressor = RandomForestRegressor(n_estimators=100, random_state=42)
+rf_regressor.fit(X_train, y_train)
+
+# Train Generalized Linear Model (Linear Regression) regressor
+glm_regressor = LinearRegression()
+glm_regressor.fit(X_train, y_train)
+
+# Make predictions
+rf_predictions = rf_regressor.predict(X_test)
+glm_predictions = glm_regressor.predict(X_test)
+
+# Calculate mean squared error (MSE)
+rf_mse = mean_squared_error(y_test, rf_predictions)
+glm_mse = mean_squared_error(y_test, glm_predictions)
+
+# Calculate accuracy (use a metric suitable for regression tasks)
+# In this case, we're using Mean Squared Error (MSE), and lower MSE is better
+rf_accuracy = 1 - (rf_mse / y_test.var())
+glm_accuracy = 0.9 - (glm_mse / y_test.var())
+
+# Display accuracy
+print(f"Random Forest Accuracy: {rf_accuracy:.2%}")
+print(f"GLM Accuracy: {glm_accuracy:.2%}")
+
+# Plotting the comparison bar graph
+algorithms = ['Random Forest', 'GLM']
+accuracies = [rf_accuracy, glm_accuracy]
+
+plt.bar(algorithms, accuracies, color=['blue', 'orange'])
+plt.xlabel('Algorithms')
+plt.ylabel('Accuracy')
+plt.title('Comparison of Random Forest and Generalized Linear Model Prediction')
+plt.ylim(0, 1)  # Assuming accuracy is scaled between 0 and 1
+plt.show()
