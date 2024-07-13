@@ -1,0 +1,7 @@
+install mediapipe in command prompt using below command:
+
+pip install --user opencv-python mediapipe
+
+Instructions:
+ 
+show fingers properly
